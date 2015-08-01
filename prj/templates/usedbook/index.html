@@ -1,0 +1,44 @@
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<form action="/usedbook/add/" method="post">
+{%csrf_token %}
+    <P>중고로 구매할 책의 ISBN을 입력해 주십시요.<P>
+    <label for="id_isbn" class="required">ISBN 10:</label> 
+        <input id="isbn" type="text" class="vTextField" name="isbn" maxlength="10" /> 
+<input type="submit" value="추가" />
+</form>
+
+<a href='/usedbook/result'> 판매자별 정렬 </a><P>
+
+총 {{wanted_book_list|length}} 권 입니다.<P>
+<table border=1>
+    <tr>
+        <th> ISBN-10 </th>
+        <th> 제목 </th>
+        <th> 정가 </th>
+        <th> 판매가 </th>
+        <th> 마일리지 </th>
+        <th> 구매가 </th>
+        <th> 알라딘 </th>
+        <th> Bookoa </th>
+        <th> 제거 </th>
+    </tr>
+    {% if wanted_book_list %}
+        {% for wantedbook in wanted_book_list %}
+            <tr>
+                <td><a href="http://www.aladin.co.kr/shop/wproduct.aspx?ISBN={{wantedbook.isbn}}">{{wantedbook.isbn}}</a></td>
+                <td>{{ wantedbook.name }}</td>
+                <td>{{wantedbook.retailPrice}}</td>
+                <td>{{wantedbook.price}}</td>
+                <td>{{wantedbook.millage}}</td>
+                <td><B>{{wantedbook.realPrice}}</B></td>
+                <td><a href="http://used.aladin.co.kr/shop/UsedShop/wuseditemall.aspx?ISBN={{wantedbook.isbn}}">알라딘</a></td>
+                <td><a href="http://www.bookoa.com/module/searchByKonan/bookSearch.asp?sType=detail&isbn={{wantedbook.isbn}}">Bookoa</a></td>
+                <td><a href="/usedbook/{{ wantedbook.id }}/delete/">제거</a></td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        <p>No book are available.</p>
+    {% endif %}
+</table>
+
+
